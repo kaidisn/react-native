@@ -12,18 +12,17 @@
 
 // Note (avik): add @flow when Flow supports spread properties in propTypes
 
-var Animated = require('Animated');
 var NativeMethodsMixin = require('NativeMethodsMixin');
+var POPAnimationMixin = require('POPAnimationMixin');
 var React = require('React');
-var TimerMixin = require('react-timer-mixin');
 var Touchable = require('Touchable');
 var TouchableWithoutFeedback = require('TouchableWithoutFeedback');
 
-var ensurePositiveDelayProps = require('ensurePositiveDelayProps');
+var cloneWithProps = require('cloneWithProps');
+var ensureComponentIsNative = require('ensureComponentIsNative');
 var flattenStyle = require('flattenStyle');
 var keyOf = require('keyOf');
-
-type Event = Object;
+var onlyChild = require('onlyChild');
 
 /**
  * A wrapper for making views respond properly to touches.
@@ -51,7 +50,7 @@ type Event = Object;
  */
 
 var TouchableOpacity = React.createClass({
-  mixins: [TimerMixin, Touchable.Mixin, NativeMethodsMixin],
+  mixins: [Touchable.Mixin, NativeMethodsMixin, POPAnimationMixin],
 
   propTypes: {
     ...TouchableWithoutFeedback.propTypes,
@@ -69,57 +68,59 @@ var TouchableOpacity = React.createClass({
   },
 
   getInitialState: function() {
-    return {
-      ...this.touchableGetInitialState(),
-      anim: new Animated.Value(1),
-    };
+    return this.touchableGetInitialState();
   },
 
   componentDidMount: function() {
-    ensurePositiveDelayProps(this.props);
+    ensureComponentIsNative(this.refs[CHILD_REF]);
   },
 
-  componentWillReceiveProps: function(nextProps) {
-    ensurePositiveDelayProps(nextProps);
+  componentDidUpdate: function() {
+    ensureComponentIsNative(this.refs[CHILD_REF]);
   },
 
   setOpacityTo: function(value) {
-    Animated.timing(
-      this.state.anim,
-      {toValue: value, duration: 150}
-    ).start();
+    if (POPAnimationMixin) {
+      // Reset with animation if POP is available
+      this.stopAllAnimations();
+      var anim = {
+        type: this.AnimationTypes.linear,
+        property: this.AnimationProperties.opacity,
+        toValue: value,
+      };
+      this.startAnimation(CHILD_REF, anim);
+    } else {
+      // Reset immediately if POP is unavailable
+      this.refs[CHILD_REF].setNativeProps({
+        opacity: value
+      });
+    }
   },
 
   /**
    * `Touchable.Mixin` self callbacks. The mixin will invoke these if they are
    * defined on your component.
    */
-  touchableHandleActivePressIn: function(e: Event) {
-    this.clearTimeout(this._hideTimeout);
-    this._hideTimeout = null;
-    this._opacityActive();
-    this.props.onPressIn && this.props.onPressIn(e);
+  touchableHandleActivePressIn: function() {
+    this.refs[CHILD_REF].setNativeProps({
+      opacity: this.props.activeOpacity
+    });
+    this.props.onPressIn && this.props.onPressIn();
   },
 
-  touchableHandleActivePressOut: function(e: Event) {
-    if (!this._hideTimeout) {
-      this._opacityInactive();
-    }
-    this.props.onPressOut && this.props.onPressOut(e);
+  touchableHandleActivePressOut: function() {
+    var child = onlyChild(this.props.children);
+    var childStyle = flattenStyle(child.props.style) || {};
+    this.setOpacityTo(childStyle.opacity === undefined ? 1 : childStyle.opacity);
+    this.props.onPressOut && this.props.onPressOut();
   },
 
-  touchableHandlePress: function(e: Event) {
-    this.clearTimeout(this._hideTimeout);
-    this._opacityActive();
-    this._hideTimeout = this.setTimeout(
-      this._opacityInactive,
-      this.props.delayPressOut || 100
-    );
-    this.props.onPress && this.props.onPress(e);
+  touchableHandlePress: function() {
+    this.props.onPress && this.props.onPress();
   },
 
-  touchableHandleLongPress: function(e: Event) {
-    this.props.onLongPress && this.props.onLongPress(e);
+  touchableHandleLongPress: function() {
+    this.props.onLongPress && this.props.onLongPress();
   },
 
   touchableGetPressRectOffset: function() {
@@ -127,46 +128,21 @@ var TouchableOpacity = React.createClass({
   },
 
   touchableGetHighlightDelayMS: function() {
-    return this.props.delayPressIn || 0;
-  },
-
-  touchableGetLongPressDelayMS: function() {
-    return this.props.delayLongPress === 0 ? 0 :
-      this.props.delayLongPress || 500;
-  },
-
-  touchableGetPressOutDelayMS: function() {
-    return this.props.delayPressOut;
-  },
-
-  _opacityActive: function() {
-    this.setOpacityTo(this.props.activeOpacity);
-  },
-
-  _opacityInactive: function() {
-    this.clearTimeout(this._hideTimeout);
-    this._hideTimeout = null;
-    var childStyle = flattenStyle(this.props.style) || {};
-    this.setOpacityTo(
-      childStyle.opacity === undefined ? 1 : childStyle.opacity
-    );
+    return 0;
   },
 
   render: function() {
-    return (
-      <Animated.View
-        accessible={true}
-        style={[this.props.style, {opacity: this.state.anim}]}
-        testID={this.props.testID}
-        onStartShouldSetResponder={this.touchableHandleStartShouldSetResponder}
-        onResponderTerminationRequest={this.touchableHandleResponderTerminationRequest}
-        onResponderGrant={this.touchableHandleResponderGrant}
-        onResponderMove={this.touchableHandleResponderMove}
-        onResponderRelease={this.touchableHandleResponderRelease}
-        onResponderTerminate={this.touchableHandleResponderTerminate}>
-        {this.props.children}
-      </Animated.View>
-    );
+    return cloneWithProps(onlyChild(this.props.children), {
+      ref: CHILD_REF,
+      accessible: true,
+      testID: this.props.testID,
+      onStartShouldSetResponder: this.touchableHandleStartShouldSetResponder,
+      onResponderTerminationRequest: this.touchableHandleResponderTerminationRequest,
+      onResponderGrant: this.touchableHandleResponderGrant,
+      onResponderMove: this.touchableHandleResponderMove,
+      onResponderRelease: this.touchableHandleResponderRelease,
+      onResponderTerminate: this.touchableHandleResponderTerminate,
+    });
   },
 });
 
@@ -178,5 +154,6 @@ var TouchableOpacity = React.createClass({
  */
 var PRESS_RECT_OFFSET = {top: 20, left: 20, right: 20, bottom: 30};
 
+var CHILD_REF = keyOf({childRef: null});
 
 module.exports = TouchableOpacity;
