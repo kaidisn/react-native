@@ -26,6 +26,7 @@
 #import "RCTSourceCode.h"
 #import "RCTSparseArray.h"
 #import "RCTUtils.h"
+#import "RCTDisplayLink.h"
 
 #define RCTAssertJSThread() \
   RCTAssert(![NSStringFromClass([_javaScriptExecutor class]) isEqualToString:@"RCTContextExecutor"] || \
@@ -66,8 +67,8 @@ RCT_EXTERN NSArray *RCTGetModuleClasses(void);
   __weak id<RCTJavaScriptExecutor> _javaScriptExecutor;
   NSMutableArray *_moduleDataByID;
   RCTModuleMap *_modulesByName;
-  CADisplayLink *_mainDisplayLink;
-  CADisplayLink *_jsDisplayLink;
+  RCTDisplayLink *_mainDisplayLink;
+  RCTDisplayLink *_jsDisplayLink;
   NSMutableSet *_frameUpdateObservers;
   NSMutableArray *_scheduledCalls;
   RCTSparseArray *_scheduledCallbacks;
@@ -93,10 +94,10 @@ RCT_EXTERN NSArray *RCTGetModuleClasses(void);
     _frameUpdateObservers = [NSMutableSet new];
     _scheduledCalls = [NSMutableArray new];
     _scheduledCallbacks = [RCTSparseArray new];
-    _jsDisplayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(_jsThreadUpdate:)];
+    _jsDisplayLink = [RCTDisplayLink displayLinkWithTarget:self selector:@selector(_jsThreadUpdate:)];
 
     if (RCT_DEV) {
-      _mainDisplayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(_mainThreadUpdate:)];
+      _mainDisplayLink = [RCTDisplayLink displayLinkWithTarget:self selector:@selector(_mainThreadUpdate:)];
       [_mainDisplayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
     }
 
@@ -796,7 +797,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithBundleURL:(__unused NSURL *)bundleUR
   return YES;
 }
 
-- (void)_jsThreadUpdate:(CADisplayLink *)displayLink
+- (void)_jsThreadUpdate:(RCTDisplayLink *)displayLink
 {
   RCTAssertJSThread();
   RCTProfileBeginEvent(0, @"DispatchFrameUpdate", nil);
@@ -844,7 +845,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithBundleURL:(__unused NSURL *)bundleUR
   )
 }
 
-- (void)_mainThreadUpdate:(CADisplayLink *)displayLink
+- (void)_mainThreadUpdate:(RCTDisplayLink *)displayLink
 {
   RCTAssertMainThread();
 
