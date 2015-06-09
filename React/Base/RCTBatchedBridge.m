@@ -22,6 +22,7 @@
 #import "RCTProfile.h"
 #import "RCTSourceCode.h"
 #import "RCTUtils.h"
+#import "RCTDisplayLink.h"
 
 #define RCTAssertJSThread() \
   RCTAssert(![NSStringFromClass([_javaScriptExecutor class]) isEqualToString:@"RCTContextExecutor"] || \
@@ -68,7 +69,7 @@ RCT_EXTERN NSArray<Class> *RCTGetModuleClasses(void);
   NSArray<RCTModuleData *> *_moduleDataByID;
   NSDictionary<NSString *, id<RCTBridgeModule>> *_modulesByName_DEPRECATED;
   NSArray<Class> *_moduleClassesByID;
-  CADisplayLink *_jsDisplayLink;
+  RCTDisplayLink *_jsDisplayLink;
   NSMutableSet<RCTModuleData *> *_frameUpdateObservers;
 
   // Bridge startup stats (TODO: capture in perf logger)
@@ -94,7 +95,7 @@ RCT_EXTERN NSArray<Class> *RCTGetModuleClasses(void);
     _loading = YES;
     _pendingCalls = [NSMutableArray new];
     _frameUpdateObservers = [NSMutableSet new];
-    _jsDisplayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(_jsThreadUpdate:)];
+    _jsDisplayLink = [RCTDisplayLink displayLinkWithTarget:self selector:@selector(_jsThreadUpdate:)];
 
     [RCTBridge setCurrentBridge:self];
 
@@ -933,7 +934,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithBundleURL:(__unused NSURL *)bundleUR
   return YES;
 }
 
-- (void)_jsThreadUpdate:(CADisplayLink *)displayLink
+- (void)_jsThreadUpdate:(RCTDisplayLink *)displayLink
 {
   RCTAssertJSThread();
   RCT_PROFILE_BEGIN_EVENT(0, @"DispatchFrameUpdate", nil);
