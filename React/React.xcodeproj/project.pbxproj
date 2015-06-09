@@ -70,6 +70,7 @@
 		83CBBA691A601EF300E9B192 /* RCTEventDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 83CBBA661A601EF300E9B192 /* RCTEventDispatcher.m */; };
 		83CBBA981A6020BB00E9B192 /* RCTTouchHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 83CBBA971A6020BB00E9B192 /* RCTTouchHandler.m */; };
 		83CBBACC1A6023D300E9B192 /* RCTConvert.m in Sources */ = {isa = PBXBuildFile; fileRef = 83CBBACB1A6023D300E9B192 /* RCTConvert.m */; };
+		850FA8331B265C6300ED2236 /* RCTDisplayLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 850FA8321B265C6300ED2236 /* RCTDisplayLink.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -224,6 +225,8 @@
 		83CBBA971A6020BB00E9B192 /* RCTTouchHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTTouchHandler.m; sourceTree = "<group>"; };
 		83CBBACA1A6023D300E9B192 /* RCTConvert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTConvert.h; sourceTree = "<group>"; };
 		83CBBACB1A6023D300E9B192 /* RCTConvert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTConvert.m; sourceTree = "<group>"; };
+		850FA8321B265C6300ED2236 /* RCTDisplayLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTDisplayLink.m; sourceTree = "<group>"; };
+		850FA8341B265C7000ED2236 /* RCTDisplayLink.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTDisplayLink.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -435,6 +438,8 @@
 				146459251B06C49500B389AA /* RCTFPSGraph.m */,
 				1403F2B11B0AE60700C2A9A4 /* RCTPerfStats.h */,
 				1403F2B21B0AE60700C2A9A4 /* RCTPerfStats.m */,
+				850FA8321B265C6300ED2236 /* RCTDisplayLink.m */,
+				850FA8341B265C7000ED2236 /* RCTDisplayLink.h */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -569,6 +574,7 @@
 				830BA4551A8E3BDA00D53203 /* RCTCache.m in Sources */,
 				137327E71AA5CF210034F82E /* RCTTabBar.m in Sources */,
 				00C1A2B31AC0B7E000E89A1C /* RCTDevMenu.m in Sources */,
+				850FA8331B265C6300ED2236 /* RCTDisplayLink.m in Sources */,
 				14435CE51AAC4AE100FC20F4 /* RCTMap.m in Sources */,
 				134FCB3E1A6E7F0800051CC8 /* RCTWebViewExecutor.m in Sources */,
 				13B0801C1A69489C00A75B9A /* RCTNavItem.m in Sources */,

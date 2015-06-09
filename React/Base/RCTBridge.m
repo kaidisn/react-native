@@ -28,6 +28,7 @@
 #import "RCTSourceCode.h"
 #import "RCTSparseArray.h"
 #import "RCTUtils.h"
+#import "RCTDisplayLink.h"
 
 NSString *const RCTReloadNotification = @"RCTReloadNotification";
 NSString *const RCTJavaScriptDidLoadNotification = @"RCTJavaScriptDidLoadNotification";
@@ -667,13 +668,13 @@ static NSDictionary *RCTLocalModulesConfig()
 
 @interface RCTFrameUpdate (Private)
 
-- (instancetype)initWithDisplayLink:(CADisplayLink *)displayLink;
+- (instancetype)initWithDisplayLink:(RCTDisplayLink *)displayLink;
 
 @end
 
 @implementation RCTFrameUpdate
 
-- (instancetype)initWithDisplayLink:(CADisplayLink *)displayLink
+- (instancetype)initWithDisplayLink:(RCTDisplayLink *)displayLink
 {
   if ((self = [super init])) {
     _timestamp = displayLink.timestamp;
@@ -824,8 +825,8 @@ RCT_INNER_BRIDGE_ONLY(_invokeAndProcessModule:(NSString *)module method:(NSStrin
   RCTSparseArray *_queuesByID;
   dispatch_queue_t _methodQueue;
   NSDictionary *_modulesByName;
-  CADisplayLink *_mainDisplayLink;
-  CADisplayLink *_jsDisplayLink;
+  RCTDisplayLink *_mainDisplayLink;
+  RCTDisplayLink *_jsDisplayLink;
   NSMutableSet *_frameUpdateObservers;
   NSMutableArray *_scheduledCalls;
   RCTSparseArray *_scheduledCallbacks;
@@ -849,10 +850,10 @@ RCT_INNER_BRIDGE_ONLY(_invokeAndProcessModule:(NSString *)module method:(NSStrin
     _scheduledCalls = [[NSMutableArray alloc] init];
     _scheduledCallbacks = [[RCTSparseArray alloc] init];
     _queuesByID = [[RCTSparseArray alloc] init];
-    _jsDisplayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(_jsThreadUpdate:)];
+    _jsDisplayLink = [RCTDisplayLink displayLinkWithTarget:self selector:@selector(_jsThreadUpdate:)];
 
     if (RCT_DEV) {
-      _mainDisplayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(_mainThreadUpdate:)];
+      _mainDisplayLink = [RCTDisplayLink displayLinkWithTarget:self selector:@selector(_mainThreadUpdate:)];
       [_mainDisplayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
     }
 
@@ -1463,7 +1464,7 @@ RCT_INNER_BRIDGE_ONLY(_invokeAndProcessModule:(NSString *)module method:(NSStrin
   return YES;
 }
 
-- (void)_jsThreadUpdate:(CADisplayLink *)displayLink
+- (void)_jsThreadUpdate:(RCTDisplayLink *)displayLink
 {
   RCTAssertJSThread();
   RCTProfileBeginEvent();
@@ -1512,7 +1513,7 @@ RCT_INNER_BRIDGE_ONLY(_invokeAndProcessModule:(NSString *)module method:(NSStrin
   });
 }
 
-- (void)_mainThreadUpdate:(CADisplayLink *)displayLink
+- (void)_mainThreadUpdate:(RCTDisplayLink *)displayLink
 {
   RCTAssertMainThread();
 
