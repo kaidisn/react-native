@@ -14,16 +14,6 @@
 #import "RCTEventDispatcher.h"
 #import "RCTUtils.h"
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
-
-#define UIUserNotificationTypeAlert UIRemoteNotificationTypeAlert
-#define UIUserNotificationTypeBadge UIRemoteNotificationTypeBadge
-#define UIUserNotificationTypeSound UIRemoteNotificationTypeSound
-#define UIUserNotificationTypeNone  UIRemoteNotificationTypeNone
-#define UIUserNotificationType      UIRemoteNotificationType
-
-#endif
-
 NSString *const RCTRemoteNotificationReceived = @"RemoteNotificationReceived";
 NSString *const RCTRemoteNotificationsRegistered = @"RemoteNotificationsRegistered";
 
@@ -137,33 +127,43 @@ RCT_EXPORT_METHOD(getApplicationIconBadgeNumber:(RCTResponseSenderBlock)callback
 
 RCT_EXPORT_METHOD(requestPermissions:(NSDictionary *)permissions)
 {
-  UIUserNotificationType types = UIUserNotificationTypeNone;
-  if (permissions) {
-    if ([permissions[@"alert"] boolValue]) {
-      types |= UIUserNotificationTypeAlert;
+  if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+    UIUserNotificationType types = UIUserNotificationTypeNone;
+    if (permissions) {
+      if ([permissions[@"alert"] boolValue]) {
+        types |= UIUserNotificationTypeAlert;
+      }
+      if ([permissions[@"badge"] boolValue]) {
+        types |= UIUserNotificationTypeBadge;
+      }
+      if ([permissions[@"sound"] boolValue]) {
+        types |= UIUserNotificationTypeSound;
+      }
+    } else {
+      types = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound;
     }
-    if ([permissions[@"badge"] boolValue]) {
-      types |= UIUserNotificationTypeBadge;
-    }
-    if ([permissions[@"sound"] boolValue]) {
-      types |= UIUserNotificationTypeSound;
-    }
-  } else {
-    types = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound;
+    id notificationSettings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
+    [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
   }
+  else {
+    UIRemoteNotificationType types = UIRemoteNotificationTypeNone;
+    if (permissions) {
+      if ([permissions[@"alert"] boolValue]) {
+        types |= UIRemoteNotificationTypeAlert;
+      }
+      if ([permissions[@"badge"] boolValue]) {
+        types |= UIRemoteNotificationTypeBadge;
+      }
+      if ([permissions[@"sound"] boolValue]) {
+        types |= UIRemoteNotificationTypeSound;
+      }
+    } else {
+      types = UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound;
+    }
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_8_0
-
-  id notificationSettings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
-  [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];
-  [[UIApplication sharedApplication] registerForRemoteNotifications];
-
-#else
-
-  [[UIApplication sharedApplication] registerForRemoteNotificationTypes:types];
-
-#endif
-
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:types];
+  }
 }
 
 RCT_EXPORT_METHOD(abandonPermissions)
