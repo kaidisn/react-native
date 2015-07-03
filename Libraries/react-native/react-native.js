@@ -87,6 +87,16 @@ var ReactNative = Object.assign(Object.create(require('React')), {
     createFragment: require('ReactFragment').create,
     update: require('update'),
   },
+
+  // Misc
+  ActionSheetIOS: require('ActionSheetIOS'),
+  ScrollResponder: require('ScrollResponder'),
+  Dimensions: require('Dimensions'),
+  POPAnimation: require('POPAnimation'),
+  POPAnimationMixin: require('POPAnimationMixin'),
+  ReactTransitionGroup: require('ReactTransitionGroup'),
+  NativeMethodsMixin: require('NativeMethodsMixin'),
+  StaticContainer: require('StaticContainer.react'),
 });
 
 if (__DEV__) {
