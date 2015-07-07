@@ -110,8 +110,16 @@ CGFloat const ZINDEX_STICKY_HEADER = 50;
   return YES;
 }
 
-- (id<RCTEvent>)coalesceWithEvent:(id<RCTEvent>)newEvent
+- (RCTScrollEvent *)coalesceWithEvent:(RCTScrollEvent *)newEvent
 {
+  NSArray *updatedChildFrames = [_userData[@"updatedChildFrames"] arrayByAddingObjectsFromArray:newEvent->_userData[@"updatedChildFrames"]];
+
+  if (updatedChildFrames) {
+    NSMutableDictionary *userData = [newEvent->_userData mutableCopy];
+    userData[@"updatedChildFrames"] = updatedChildFrames;
+    newEvent->_userData = userData;
+  }
+  
   return newEvent;
 }
 
