@@ -89,9 +89,7 @@ var ReactNative = Object.assign(Object.create(require('React')), {
   },
 
   // Misc
-  ActionSheetIOS: require('ActionSheetIOS'),
   ScrollResponder: require('ScrollResponder'),
-  Dimensions: require('Dimensions'),
   POPAnimation: require('POPAnimation'),
   POPAnimationMixin: require('POPAnimationMixin'),
   ReactTransitionGroup: require('ReactTransitionGroup'),
