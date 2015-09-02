@@ -168,6 +168,13 @@ var ReactNative = {
       return require('update');
     },
   },
+
+  // Misc
+  get POPAnimation() { return require('POPAnimation'); },
+  get POPAnimationMixin() { return require('POPAnimationMixin'); },
+  get NativeMethodsMixin() { return require('NativeMethodsMixin'); },
+  get StaticContainer() { return require('StaticContainer.react'); },
+  get TimerMixin() { return require('react-timer-mixin'); },
 };
 
 // Preserve getters with warnings on the internal ReactNative copy without
