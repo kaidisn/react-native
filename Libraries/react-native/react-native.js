@@ -101,6 +101,15 @@ var ReactNative = {
     get createFragment() { return require('ReactFragment').create; },
     get update() { return require('update'); },
   },
+
+  // Misc
+  get ScrollResponder() { return require('ScrollResponder'); },
+  get POPAnimation() { return require('POPAnimation'); },
+  get POPAnimationMixin() { return require('POPAnimationMixin'); },
+  get ReactTransitionGroup() { return require('ReactTransitionGroup'); },
+  get NativeMethodsMixin() { return require('NativeMethodsMixin'); },
+  get StaticContainer() { return require('StaticContainer.react'); },
+  get TimerMixin() { return require('react-timer-mixin'); },
   
   // Note: this must be placed last to prevent eager
   // evaluation of the getter-wrapped submodules above
