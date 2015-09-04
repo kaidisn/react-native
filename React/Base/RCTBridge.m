@@ -302,3 +302,5 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 RCT_INNER_BRIDGE_ONLY(_invokeAndProcessModule:(__unused NSString *)module
                       method:(__unused NSString *)method
                       arguments:(__unused NSArray *)args);
+
+@end
