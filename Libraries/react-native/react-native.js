@@ -104,6 +104,7 @@ var ReactNative = Object.assign(Object.create(require('React')), {
   ReactTransitionGroup: require('ReactTransitionGroup'),
   NativeMethodsMixin: require('NativeMethodsMixin'),
   StaticContainer: require('StaticContainer.react'),
+  TimerMixin: require('react-timer-mixin'),
 });
 
 if (__DEV__) {
