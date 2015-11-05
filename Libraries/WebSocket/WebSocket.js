@@ -17,7 +17,6 @@ const Platform = require('Platform');
 const WebSocketEvent = require('WebSocketEvent');
 
 const EventTarget = require('event-target-shim');
-const base64 = require('base64-js');
 
 import type EventSubscription from 'EventSubscription';
 
@@ -156,7 +155,7 @@ class WebSocket extends EventTarget(...WEBSOCKET_EVENTS) {
           return;
         }
         var event = new WebSocketEvent('message', {
-          data: (ev.type === 'binary') ? base64.toByteArray(ev.data).buffer : ev.data
+          data: ev.data
         });
         this.dispatchEvent(event);
       }),
