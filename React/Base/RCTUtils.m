@@ -470,6 +470,58 @@ NSData *RCTGzipData(NSData *input, float level)
   return output;
 }
 
+NSData *RCTGunzipData(NSData *input)
+{
+  if (input.length == 0) {
+    return input;
+  }
+
+  void *libz = dlopen("/usr/lib/libz.dylib", RTLD_LAZY);
+  int (*inflateInit2_)(z_streamp, int, const char *, int) = dlsym(libz, "inflateInit2_");
+  int (*inflate)(z_streamp, int) = dlsym(libz, "inflate");
+  int (*inflateEnd)(z_streamp) = dlsym(libz, "inflateEnd");
+
+  z_stream stream;
+  stream.zalloc = Z_NULL;
+  stream.zfree = Z_NULL;
+  stream.opaque = Z_NULL;
+  stream.avail_in = (uint)input.length;
+  stream.next_in = (Bytef *)input.bytes;
+  stream.total_out = 0;
+  stream.avail_out = 0;
+
+  uint full_length = (uint)input.length;
+  uint half_length = (uint)input.length / 2;
+
+  NSMutableData *output = nil;
+  BOOL finished = NO;
+  if (inflateInit2(&stream, 47) == Z_OK) {
+    output = [NSMutableData dataWithLength:(full_length + half_length)];
+    while (!finished) {
+      if (stream.total_out >= output.length) {
+        output.length += half_length;
+      }
+      stream.next_out = (uint8_t *)output.mutableBytes + stream.total_out;
+      stream.avail_out = (uInt)(output.length - stream.total_out);
+      int status = inflate(&stream, Z_SYNC_FLUSH);
+      if (status == Z_STREAM_END) {
+        finished = YES;
+      } else if (status != Z_OK) {
+        break;
+      }
+    }
+    if (inflateEnd(&stream) == Z_OK && finished) {
+      output.length = stream.total_out;
+    } else {
+      output = nil;
+    }
+  }
+
+  dlclose(libz);
+
+  return output;
+}
+
 NSString *RCTBundlePathForURL(NSURL *URL)
 {
   if (!URL.fileURL) {

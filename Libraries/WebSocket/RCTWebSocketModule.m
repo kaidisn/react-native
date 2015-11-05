@@ -82,6 +82,10 @@ RCT_EXPORT_METHOD(close:(nonnull NSNumber *)socketID)
 
 - (void)webSocket:(RCTSRWebSocket *)webSocket didReceiveMessage:(id)message
 {
+  if ([message isKindOfClass:[NSData class]]) {
+    NSData *output = RCTGunzipData(message);
+    message = [[NSString alloc] initWithData:output encoding:NSUTF8StringEncoding];
+  }
   [_bridge.eventDispatcher sendDeviceEventWithName:@"websocketMessage" body:@{
     @"data": message,
     @"id": webSocket.reactTag
