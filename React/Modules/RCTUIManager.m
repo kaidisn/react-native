@@ -179,6 +179,12 @@ static UIViewAnimationOptions UIViewAnimationOptionsFromRCTAnimationType(RCTAnim
 
 @end
 
+@interface RCTUIManager ()
+
+@property (nonatomic) BOOL invalidateLayoutChange;
+
+@end
+
 @implementation RCTUIManager
 {
   dispatch_queue_t _shadowQueue;
@@ -295,6 +301,28 @@ extern NSString *RCTBridgeModuleNameForClass(Class cls);
                                            selector:@selector(didReceiveNewContentSizeMultiplier)
                                                name:RCTAccessibilityManagerDidUpdateMultiplierNotification
                                              object:_bridge.accessibilityManager];
+  
+  [[NSNotificationCenter defaultCenter] addObserver:self
+                                           selector:@selector(invalidateLayout)
+                                               name:UIApplicationWillResignActiveNotification
+                                             object:nil];
+  
+  for (NSString *name in @[UIApplicationWillEnterForegroundNotification,
+                           UIApplicationDidBecomeActiveNotification]) {
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(validateLayout)
+                                                 name:name
+                                               object:nil];
+  }
+}
+
+- (void)invalidateLayout {
+  self.invalidateLayoutChange = YES;
+}
+
+- (void)validateLayout {
+  self.invalidateLayoutChange = NO;
 }
 
 - (dispatch_queue_t)methodQueue
@@ -925,6 +953,7 @@ RCT_EXPORT_METHOD(findSubviewIn:(nonnull NSNumber *)reactTag atPoint:(CGPoint)po
  */
 - (void)_layoutAndMount
 {
+  if (self.invalidateLayoutChange) return;
   // Gather blocks to be executed now that all view hierarchy manipulations have
   // been completed (note that these may still take place before layout has finished)
   for (RCTComponentData *componentData in _componentDataByName.allValues) {
