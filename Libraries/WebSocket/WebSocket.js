@@ -17,8 +17,6 @@ const NativeEventEmitter = require('NativeEventEmitter');
 const NativeModules = require('NativeModules');
 const Platform = require('Platform');
 const WebSocketEvent = require('WebSocketEvent');
-
-const base64 = require('base64-js');
 const binaryToBase64 = require('binaryToBase64');
 const invariant = require('fbjs/lib/invariant');
 
@@ -173,7 +171,7 @@ class WebSocket extends EventTarget(...WEBSOCKET_EVENTS) {
 
   ping(): void {
     if (this.readyState === this.CONNECTING) {
-        throw new Error('INVALID_STATE_ERR');
+      throw new Error('INVALID_STATE_ERR');
     }
 
     WebSocketModule.ping(this._socketId);
@@ -204,7 +202,7 @@ class WebSocket extends EventTarget(...WEBSOCKET_EVENTS) {
         let data = ev.data;
         switch (ev.type) {
           case 'binary':
-            data = base64.toByteArray(ev.data).buffer;
+            data = ev.data;
             break;
           case 'blob':
             data = Blob.create(ev.data);
@@ -225,8 +223,8 @@ class WebSocket extends EventTarget(...WEBSOCKET_EVENTS) {
         }
         this.readyState = this.CLOSED;
         this.dispatchEvent(new WebSocketEvent('close', {
-          code: ev.code,
-          reason: ev.reason,
+            code: ev.code,
+            reason: ev.reason,
         }));
         this._unregisterEvents();
         this.close();
@@ -237,10 +235,10 @@ class WebSocket extends EventTarget(...WEBSOCKET_EVENTS) {
         }
         this.readyState = this.CLOSED;
         this.dispatchEvent(new WebSocketEvent('error', {
-          message: ev.message,
+            message: ev.message,
         }));
         this.dispatchEvent(new WebSocketEvent('close', {
-          message: ev.message,
+            message: ev.message,
         }));
         this._unregisterEvents();
         this.close();

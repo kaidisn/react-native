@@ -138,16 +138,13 @@ RCT_EXPORT_METHOD(close:(nonnull NSNumber *)socketID)
     message = [contentHandler processMessage:message forSocketID:socketID withType:&type];
   } else {
     if ([message isKindOfClass:[NSData class]]) {
-      type = @"binary";
-      message = [message base64EncodedStringWithOptions:0];
-    } else {
-      type = @"text";
+      NSData *output = RCTGunzipData(message);
+      message = [[NSString alloc] initWithData:output encoding:NSUTF8StringEncoding];
     }
   }
 
   [self sendEventWithName:@"websocketMessage" body:@{
     @"data": message,
-    @"type": type,
     @"id": webSocket.reactTag
   }];
 }
