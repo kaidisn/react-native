@@ -135,6 +135,10 @@ const ReactNative = {
     );
     return null;
   },
+
+  // Misc
+  get POPAnimation() { return require('POPAnimation'); },
+  get POPAnimationMixin() { return require('POPAnimationMixin'); },
 };
 
 // Better error messages when accessing React APIs on ReactNative
