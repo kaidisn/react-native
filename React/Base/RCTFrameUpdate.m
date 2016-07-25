@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-#import <QuartzCore/CADisplayLink.h>
+#import "DCDDisplayLink.h"
 
 #import "RCTFrameUpdate.h"
 
@@ -17,7 +17,7 @@
 
 RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
-- (instancetype)initWithDisplayLink:(CADisplayLink *)displayLink
+- (instancetype)initWithDisplayLink:(DCDDisplayLink *)displayLink
 {
   if ((self = [super init])) {
     _timestamp = displayLink.timestamp;
