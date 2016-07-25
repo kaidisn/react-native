@@ -740,6 +740,7 @@
 		CF85BC331E79EC6B00F1EF3B /* RCTDeviceInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CF85BC311E79EC6B00F1EF3B /* RCTDeviceInfo.m */; };
 		CF85BC341E79EC7A00F1EF3B /* RCTDeviceInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = CF85BC301E79EC6B00F1EF3B /* RCTDeviceInfo.h */; };
 		CF85BC351E79EC7D00F1EF3B /* RCTDeviceInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CF85BC311E79EC6B00F1EF3B /* RCTDeviceInfo.m */; };
+    	C19A08CA1CEE3F6700DA4940 /* DCDDisplayLink.m in Sources */ = {isa = PBXBuildFile; fileRef = C19A08C91CEE3F6700DA4940 /* DCDDisplayLink.m */; };
 		E9B20B7B1B500126007A2DA7 /* RCTAccessibilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E9B20B7A1B500126007A2DA7 /* RCTAccessibilityManager.m */; };
 /* End PBXBuildFile section */
 
@@ -1383,6 +1384,8 @@
 		B95154311D1B34B200FE7B80 /* RCTActivityIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTActivityIndicatorView.m; sourceTree = "<group>"; };
 		CF85BC301E79EC6B00F1EF3B /* RCTDeviceInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTDeviceInfo.h; sourceTree = "<group>"; };
 		CF85BC311E79EC6B00F1EF3B /* RCTDeviceInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTDeviceInfo.m; sourceTree = "<group>"; };
+    C19A08C81CEE3F6700DA4940 /* DCDDisplayLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCDDisplayLink.h; sourceTree = "<group>"; };
+    C19A08C91CEE3F6700DA4940 /* DCDDisplayLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCDDisplayLink.m; sourceTree = "<group>"; };
 		E3BBC8EB1ADE6F47001BBD81 /* RCTTextDecorationLineType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTTextDecorationLineType.h; sourceTree = "<group>"; };
 		E9B20B791B500126007A2DA7 /* RCTAccessibilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTAccessibilityManager.h; sourceTree = "<group>"; };
 		E9B20B7A1B500126007A2DA7 /* RCTAccessibilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTAccessibilityManager.m; sourceTree = "<group>"; };
@@ -1791,6 +1794,8 @@
 				83CBBA4F1A601E3B00E9B192 /* RCTUtils.h */,
 				83CBBA501A601E3B00E9B192 /* RCTUtils.m */,
 				3DB910701C74B21600838BBE /* RCTWebSocketObserverProtocol.h */,
+        		C19A08C81CEE3F6700DA4940 /* DCDDisplayLink.h */,
+        		C19A08C91CEE3F6700DA4940 /* DCDDisplayLink.m */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -2609,6 +2614,7 @@
 				14F3620E1AABD06A001CE568 /* RCTSwitchManager.m in Sources */,
 				13B080201A69489C00A75B9A /* RCTActivityIndicatorViewManager.m in Sources */,
 				13E067561A70F44B002CDEE1 /* RCTViewManager.m in Sources */,
+        		C19A08CA1CEE3F6700DA4940 /* DCDDisplayLink.m in Sources */,
 				13BB3D021BECD54500932C10 /* RCTImageSource.m in Sources */,
 				58C571C11AA56C1900CDF9C8 /* RCTDatePickerManager.m in Sources */,
 				1450FF8A1BCFF28A00208362 /* RCTProfileTrampoline-x86_64.S in Sources */,
