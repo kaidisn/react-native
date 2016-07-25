@@ -125,6 +125,10 @@ const ReactNative = {
       'Learn about alternative navigation solutions at http://facebook.github.io/react-native/docs/navigation.html'
     );
   },
+
+  // Misc
+  get POPAnimation() { return require('POPAnimation'); },
+  get POPAnimationMixin() { return require('POPAnimationMixin'); },
 };
 
 module.exports = ReactNative;
