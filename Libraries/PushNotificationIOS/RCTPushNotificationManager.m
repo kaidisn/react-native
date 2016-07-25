@@ -231,28 +231,49 @@ RCT_EXPORT_METHOD(requestPermissions:(NSDictionary *)permissions
 
   _requestPermissionsResolveBlock = resolve;
 
-  UIUserNotificationType types = UIUserNotificationTypeNone;
-  if (permissions) {
-    if ([RCTConvert BOOL:permissions[@"alert"]]) {
-      types |= UIUserNotificationTypeAlert;
+  if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+    UIUserNotificationType types = UIUserNotificationTypeNone;
+    if (permissions) {
+      if ([RCTConvert BOOL:permissions[@"alert"]]) {
+        types |= UIUserNotificationTypeAlert;
+      }
+      if ([RCTConvert BOOL:permissions[@"badge"]]) {
+        types |= UIUserNotificationTypeBadge;
+      }
+      if ([RCTConvert BOOL:permissions[@"sound"]]) {
+        types |= UIUserNotificationTypeSound;
+      }
+    } else {
+      types = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound;
     }
-    if ([RCTConvert BOOL:permissions[@"badge"]]) {
-      types |= UIUserNotificationTypeBadge;
-    }
-    if ([RCTConvert BOOL:permissions[@"sound"]]) {
-      types |= UIUserNotificationTypeSound;
-    }
-  } else {
-    types = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound;
+    id notificationSettings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
+    [RCTSharedApplication() registerUserNotificationSettings:notificationSettings];
+    [RCTSharedApplication() registerForRemoteNotifications];
   }
-
-  UIApplication *app = RCTSharedApplication();
-  if ([app respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-    UIUserNotificationSettings *notificationSettings =
+  else {
+    UIUserNotificationType types = UIUserNotificationTypeNone;
+    if (permissions) {
+      if ([RCTConvert BOOL:permissions[@"alert"]]) {
+        types |= UIRemoteNotificationTypeAlert;
+      }
+      if ([RCTConvert BOOL:permissions[@"badge"]]) {
+        types |= UIRemoteNotificationTypeBadge;
+      }
+      if ([RCTConvert BOOL:permissions[@"sound"]]) {
+        types |= UIRemoteNotificationTypeSound;
+      }
+    } else {
+      types = UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound;
+    }
+    UIApplication *app = RCTSharedApplication();
+    if ([app respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+      UIUserNotificationSettings *notificationSettings =
       [UIUserNotificationSettings settingsForTypes:(NSUInteger)types categories:nil];
-    [app registerUserNotificationSettings:notificationSettings];
-  } else {
-    [app registerForRemoteNotificationTypes:(NSUInteger)types];
+      [app registerUserNotificationSettings:notificationSettings];
+      [app registerForRemoteNotifications];
+    } else {
+      [app registerForRemoteNotificationTypes:(NSUInteger)types];
+    }
   }
 }
 
