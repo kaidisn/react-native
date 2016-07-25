@@ -166,6 +166,10 @@ const ReactNative = {
       return require('react/lib/update');
     },
   },
+
+  // Misc
+  get POPAnimation() { return require('POPAnimation'); },
+  get POPAnimationMixin() { return require('POPAnimationMixin'); },
 };
 
 // Better error messages when accessing React APIs on ReactNative
