@@ -99,7 +99,6 @@ var InteractionManager = {
     });
     return {
       then: promise.then.bind(promise),
-      done: promise.done.bind(promise),
       cancel: function() {
         _taskQueue.cancelTasks(tasks);
       },
