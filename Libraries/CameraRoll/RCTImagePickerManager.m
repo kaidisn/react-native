@@ -10,6 +10,7 @@
 
 #import <MobileCoreServices/UTCoreTypes.h>
 #import <UIKit/UIKit.h>
+#import <Photos/Photos.h>
 
 #import <React/RCTConvert.h>
 #import <React/RCTImageStoreManager.h>
@@ -61,7 +62,7 @@ RCT_EXPORT_METHOD(openCameraDialog:(NSDictionary *)config
   imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
 
   if ([RCTConvert BOOL:config[@"videoMode"]]) {
-    imagePicker.cameraCaptureMode = UIImagePickerControllerCameraCaptureModeVideo;
+    imagePicker.mediaTypes = @[(NSString *)kUTTypeImage, (NSString *)kUTTypeMovie];
   }
 
   [self _presentPicker:imagePicker
@@ -120,10 +121,20 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info
   // We need to save it to the image store first.
   UIImage *originalImage = info[UIImagePickerControllerOriginalImage];
 
-  // WARNING: Using ImageStoreManager may cause a memory leak because the
-  // image isn't automatically removed from store once we're done using it.
-  [_bridge.imageStoreManager storeImage:originalImage withBlock:^(NSString *tempImageTag) {
-    [self _dismissPicker:picker args:tempImageTag ? @[tempImageTag, RCTNullIfNil(height), RCTNullIfNil(width)] : nil];
+  __block PHObjectPlaceholder *placeholderAsset = nil;
+  [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+    PHAssetChangeRequest *assetChangeRequest = [PHAssetChangeRequest creationRequestForAssetFromImage:originalImage];
+    placeholderAsset = assetChangeRequest.placeholderForCreatedAsset;
+  } completionHandler:^(BOOL success, NSError *error) {
+    if (success) {
+      // probably a bit hacky...
+      NSString *id = [placeholderAsset.localIdentifier substringToIndex:36];
+      NSString *assetUrlString = [NSString stringWithFormat:@"assets-library://asset/asset.JPG?id=%@&ext=JPG", id];
+
+      dispatch_sync(dispatch_get_main_queue(), ^{
+        [self _dismissPicker:picker args:assetUrlString ? @[assetUrlString, RCTNullIfNil(height), RCTNullIfNil(width)] : nil];
+      });
+    }
   }];
 }
 
