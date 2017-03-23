@@ -171,6 +171,7 @@ const ReactNative = {
   // Misc
   get POPAnimation() { return require('POPAnimation'); },
   get POPAnimationMixin() { return require('POPAnimationMixin'); },
+  get nativeImageSource() { return require('nativeImageSource'); },
 };
 
 // Better error messages when accessing React APIs on ReactNative
