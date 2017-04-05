@@ -115,7 +115,7 @@ function setUpErrorHandler(): void {
     return;
   }
 
-  function handleError(e, isFatal) {
+  var handleError = function(e, isFatal) {
     try {
       require('ExceptionsManager').handleException(e, isFatal);
     } catch (ee) {
