@@ -18,7 +18,7 @@ if (!RCTPOPAnimationManager) {
   // so all our users don't need to do null checks
   module.exports = null;
 } else {
-  var PropTypes = require('prop-types');
+  var ReactPropTypes = require('prop-types');
   var createStrictShapeTypeChecker = require('createStrictShapeTypeChecker');
   var getObjectValues = require('getObjectValues');
   var invariant = require('invariant');
