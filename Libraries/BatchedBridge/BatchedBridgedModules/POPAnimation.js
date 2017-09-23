@@ -18,7 +18,7 @@ if (!RCTPOPAnimationManager) {
   // so all our users don't need to do null checks
   module.exports = null;
 } else {
-  var ReactPropTypes = require('prop-types');
+  var PropTypes = require('prop-types');
   var createStrictShapeTypeChecker = require('createStrictShapeTypeChecker');
   var getObjectValues = require('getObjectValues');
   var invariant = require('invariant');
@@ -84,17 +84,17 @@ if (!RCTPOPAnimationManager) {
     Properties: Properties,
 
     attributeChecker: createStrictShapeTypeChecker({
-      type: ReactPropTypes.oneOf(getObjectValues(Types)),
-      property: ReactPropTypes.oneOf(getObjectValues(Properties)),
-      fromValue: ReactPropTypes.any,
-      toValue: ReactPropTypes.any,
-      duration: ReactPropTypes.any,
-      velocity: ReactPropTypes.any,
-      deceleration: ReactPropTypes.any,
-      springBounciness: ReactPropTypes.any,
-      dynamicsFriction: ReactPropTypes.any,
-      dynamicsMass: ReactPropTypes.any,
-      dynamicsTension: ReactPropTypes.any,
+      type: PropTypes.oneOf(getObjectValues(Types)),
+      property: PropTypes.oneOf(getObjectValues(Properties)),
+      fromValue: PropTypes.any,
+      toValue: PropTypes.any,
+      duration: PropTypes.any,
+      velocity: PropTypes.any,
+      deceleration: PropTypes.any,
+      springBounciness: PropTypes.any,
+      dynamicsFriction: PropTypes.any,
+      dynamicsMass: PropTypes.any,
+      dynamicsTension: PropTypes.any,
     }),
 
     lastUsedTag: 0,
