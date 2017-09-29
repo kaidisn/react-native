@@ -191,7 +191,7 @@ type OptionalProps<ItemT> = {
    */
   viewabilityConfig?: ViewabilityConfig,
 };
-type Props<ItemT> = RequiredProps<ItemT> &
+export type Props<ItemT> = RequiredProps<ItemT> &
   OptionalProps<ItemT> &
   VirtualizedListProps;
 
@@ -199,7 +199,7 @@ const defaultProps = {
   ...VirtualizedList.defaultProps,
   numColumns: 1,
 };
-type DefaultProps = typeof defaultProps;
+export type DefaultProps = typeof defaultProps;
 
 /**
  * A performant interface for rendering simple, flat lists, supporting the most handy features:

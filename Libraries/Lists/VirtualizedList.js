@@ -35,7 +35,7 @@ import type {ViewabilityConfig, ViewToken} from 'ViewabilityHelper';
 
 type Item = any;
 
-type renderItemType = (info: any) => ?React.Element<any>;
+export type renderItemType = (info: any) => ?React.Element<any>;
 
 type RequiredProps = {
   renderItem: renderItemType,
