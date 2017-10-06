@@ -105,7 +105,7 @@ var POPAnimationMixin = {
     var animIndex = animations.length;
     animations.push(animID);
     var cleanupWrapper = (finished) => {
-      if (!this.isMounted()) {
+      if (!this._isMounted) {
         return;
       }
       animations[animIndex] = 0; // zero it out so we don't try to stop it
@@ -253,8 +253,13 @@ var POPAnimationMixin = {
     this.startAnimation(refKey, sizeAnim);
   },
 
+  componentWillMount: function() {
+    this._isMounted = true;
+  },
+
   // Cleanup any potentially leaked animations.
   componentWillUnmount: function() {
+    this._isMounted = false;
     this.stopAllAnimations();
     this._popAnimationEnqueuedAnimationTimeouts.forEach(animationTimeoutHandler => {
       clearTimeout(animationTimeoutHandler);
