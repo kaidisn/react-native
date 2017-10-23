@@ -334,6 +334,23 @@ BOOL RCTIsUIManagerQueue()
   });
 }
 
+- (void)setLocalData:(NSObject *)localData forView:(UIView *)view
+{
+  RCTAssertMainQueue();
+  NSNumber *tag = view.reactTag;
+
+  dispatch_async(RCTGetUIManagerQueue(), ^{
+    RCTShadowView *shadowView = self->_shadowViewRegistry[tag];
+    if (shadowView == nil) {
+      RCTLogWarn(@"Could not locate shadow view with tag #%@, this is probably caused by a temporary inconsistency between native views and shadow views.", tag);
+      return;
+    }
+
+    shadowView.localData = localData;
+    [self setNeedsLayout];
+  });
+}
+
 /**
  * TODO(yuwang): implement the nativeID functionality in a more efficient way
  *               instead of searching the whole view tree
