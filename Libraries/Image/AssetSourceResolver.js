@@ -23,6 +23,7 @@ import type { PackagerAsset } from 'AssetRegistry';
 
 const PixelRatio = require('PixelRatio');
 const Platform = require('Platform');
+const Alerter = require('Alerter');
 
 const assetPathUtils = require('../../local-cli/bundle/assetPathUtils');
 const invariant = require('fbjs/lib/invariant');
@@ -136,6 +137,7 @@ class AssetSourceResolver {
   }
 
   fromSource(source: string): ResolvedAssetSource {
+    Alerter.alert('source', source);
     return {
       __packager_asset: true,
       width: this.asset.width,
