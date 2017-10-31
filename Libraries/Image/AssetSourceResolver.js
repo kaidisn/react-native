@@ -23,7 +23,7 @@ import type { PackagerAsset } from 'AssetRegistry';
 
 const PixelRatio = require('PixelRatio');
 const Platform = require('Platform');
-const Alerter = require('Alerter');
+const Alerter = require('AlertIOS');
 
 const assetPathUtils = require('../../local-cli/bundle/assetPathUtils');
 const invariant = require('fbjs/lib/invariant');
