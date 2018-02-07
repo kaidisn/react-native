@@ -135,6 +135,7 @@ class SwipeableFlatList<ItemT> extends React.Component<Props<ItemT>, State> {
 
     return (
       <SwipeableRow
+        preventSwipeRight={this.props.preventSwipeRight}
         slideoutView={slideoutView}
         isOpen={key === this.state.openRowKey}
         maxSwipeDistance={this._getMaxSwipeDistance(info)}
