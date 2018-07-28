@@ -137,8 +137,14 @@ static UIColor *defaultPlaceholderColor()
 
 - (void)paste:(id)sender
 {
-  [super paste:sender];
-  _textWasPasted = YES;
+  UIImage *image = [UIPasteboard generalPasteboard].image;
+  if (image) {
+    // HACK: simply post a notification when pasting image
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextViewDidPasteImageNotification" object:image];
+  } else {
+    [super paste:sender];
+    _textWasPasted = YES;
+  }
 }
 
 - (void)setContentOffset:(CGPoint)contentOffset animated:(__unused BOOL)animated
@@ -228,6 +234,18 @@ static UIColor *defaultPlaceholderColor()
   _detachedTextView.textContainerInset = self.textContainerInset;
 
   return [_detachedTextView sizeThatFits:size];
+}
+
+#pragma mark - Context Menu
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
+{
+  // Allow image paste
+  if (action == @selector(paste:) && [UIPasteboard generalPasteboard].image) {
+    return YES;
+  }
+  
+  return [super canPerformAction:action withSender:sender];
 }
 
 #pragma mark - Placeholder
