@@ -170,7 +170,9 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info
   [_pickerCancelCallbacks removeObjectAtIndex:index];
 
   UIViewController *rootViewController = RCTPresentedViewController();
-  [rootViewController dismissViewControllerAnimated:YES completion:nil];
+  dispatch_async(dispatch_get_main_queue(), ^{
+      [rootViewController dismissViewControllerAnimated:YES completion:nil];
+  });
 
   if (args) {
     successCallback(args);
