@@ -44,6 +44,12 @@ RCT_EXPORT_MODULE()
     for (size_t i = 0; i < imageCount; i++) {
 
       CGImageRef imageRef = CGImageSourceCreateImageAtIndex(imageSource, i, NULL);
+      
+      // Continue for nil
+      if (!imageRef) {
+        continue;
+      }
+      
       if (!image) {
         image = [UIImage imageWithCGImage:imageRef scale:scale orientation:UIImageOrientationUp];
       }
