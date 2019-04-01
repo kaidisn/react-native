@@ -218,7 +218,7 @@ let Image = (
 
   let style;
   let sources;
-  if (source?.uri != null) {
+  if (source && source.uri != null) {
     /* $FlowFixMe(>=0.78.0 site=react_native_android_fb) This issue was found
      * when making Flow check .android.js files. */
     const {width, height} = source;
@@ -238,7 +238,7 @@ let Image = (
     src: sources,
     /* $FlowFixMe(>=0.78.0 site=react_native_android_fb) This issue was found
      * when making Flow check .android.js files. */
-    headers: source?.headers,
+    headers: source && source.headers,
     defaultSrc: defaultSource ? defaultSource.uri : null,
     loadingIndicatorSrc: loadingIndicatorSource
       ? loadingIndicatorSource.uri
