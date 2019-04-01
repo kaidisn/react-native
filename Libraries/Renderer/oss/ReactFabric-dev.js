@@ -26,7 +26,7 @@ var deepFreezeAndThrowOnMutationInDev = require("deepFreezeAndThrowOnMutationInD
 var TextInputState = require("TextInputState");
 var FabricUIManager = require("FabricUIManager");
 var checkPropTypes = require("prop-types/checkPropTypes");
-var tracking = require("schedule/tracking");
+var tracking = require("schedule/tracing");
 var ExceptionsManager = require("ExceptionsManager");
 
 /**
@@ -12885,12 +12885,12 @@ var warnAboutInvalidUpdates = void 0;
 
 if (enableSchedulerTracking) {
   // Provide explicit error message when production+profiling bundle of e.g. react-dom
-  // is used with production (non-profiling) bundle of schedule/tracking
+  // is used with production (non-profiling) bundle of schedule/tracing
   invariant(
     tracking.__interactionsRef != null &&
       tracking.__interactionsRef.current != null,
     "It is not supported to run the profiling version of a renderer (for example, `react-dom/profiling`) " +
-      "without also replacing the `schedule/tracking` module with `schedule/tracking-profiling`. " +
+      "without also replacing the `schedule/tracing` module with `schedule/tracing-profiling`. " +
       "Your bundler might have a setting for aliasing both modules. " +
       "Learn more at http://fb.me/react-profiling"
   );

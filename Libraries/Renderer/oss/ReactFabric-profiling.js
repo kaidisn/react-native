@@ -19,7 +19,7 @@ var ReactNativeViewConfigRegistry = require("ReactNativeViewConfigRegistry"),
   flattenStyle = require("flattenStyle"),
   TextInputState = require("TextInputState"),
   FabricUIManager = require("FabricUIManager"),
-  tracking = require("schedule/tracking"),
+  tracking = require("schedule/tracing"),
   ExceptionsManager = require("ExceptionsManager");
 function invariant(condition, format, a, b, c, d, e, f) {
   if (!condition) {
@@ -4511,7 +4511,7 @@ var Dispatcher = { readContext: readContext },
 invariant(
   null != tracking.__interactionsRef &&
     null != tracking.__interactionsRef.current,
-  "It is not supported to run the profiling version of a renderer (for example, `react-dom/profiling`) without also replacing the `schedule/tracking` module with `schedule/tracking-profiling`. Your bundler might have a setting for aliasing both modules. Learn more at http://fb.me/react-profiling"
+  "It is not supported to run the profiling version of a renderer (for example, `react-dom/profiling`) without also replacing the `schedule/tracing` module with `schedule/tracing-profiling`. Your bundler might have a setting for aliasing both modules. Learn more at http://fb.me/react-profiling"
 );
 var isWorking = !1,
   nextUnitOfWork = null,
