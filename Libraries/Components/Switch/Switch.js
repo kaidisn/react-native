@@ -100,8 +100,8 @@ class Switch extends React.Component<Props> {
 
     // Support deprecated color props.
     let _thumbColor = thumbColor;
-    let _trackColorForFalse = trackColor ? trackColor.false : null;
-    let _trackColorForTrue = trackColor ? trackColor.true : null;
+    let _trackColorForFalse = trackColor?.false;
+    let _trackColorForTrue = trackColor?.true;
 
     // TODO: Remove support for these props after a couple releases.
     const {thumbTintColor, tintColor, onTintColor} = (props: $FlowFixMe);
