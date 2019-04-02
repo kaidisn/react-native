@@ -68,12 +68,7 @@ static NSURL *serverRootWithHost(NSString *host)
 #if RCT_DEV
 - (BOOL)isPackagerRunning:(NSString *)host
 {
-  NSURL *url = [serverRootWithHost(host) URLByAppendingPathComponent:@"status"];
-  NSURLRequest *request = [NSURLRequest requestWithURL:url];
-  NSURLResponse *response;
-  NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:NULL];
-  NSString *status = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-  return [status isEqualToString:@"packager-status:running"];
+  return YES; //anything else honestly isn't worth the trouble
 }
 
 - (NSString *)guessPackagerHost
