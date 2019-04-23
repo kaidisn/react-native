@@ -672,11 +672,16 @@ static UIImage *RCTResizeImageIfNeeded(UIImage *image,
 
     id<RCTImageDataDecoder> imageDecoder = [self imageDataDecoderForData:data];
     if (imageDecoder) {
-        return [imageDecoder decodeImageData:data
-                                        size:size
-                                       scale:scale
-                                  resizeMode:resizeMode
-                           completionHandler:completionHandler] ?: ^{};
+       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [imageDecoder decodeImageData:data
+                                    size:size
+                                    scale:scale
+                              resizeMode:resizeMode
+                        completionHandler:completionHandler];
+        });
+        return ^{
+            atomic_store(&cancelled, YES);
+        };
     } else {
         dispatch_block_t decodeBlock = ^{
             // Calculate the size, in bytes, that the decompressed image will require
