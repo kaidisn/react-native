@@ -95,7 +95,7 @@ RCT_EXPORT_METHOD(openCameraDialog:(NSDictionary *)config
   imagePicker.unmirrorFrontFacingCamera = [RCTConvert BOOL:config[@"unmirrorFrontFacingCamera"]];
 
   if ([RCTConvert BOOL:config[@"videoMode"]]) {
-    imagePicker.cameraCaptureMode = UIImagePickerControllerCameraCaptureModeVideo;
+    imagePicker.mediaTypes = @[(NSString *)kUTTypeImage, (NSString *)kUTTypeMovie];
   }
 
   [self _presentPicker:imagePicker
@@ -200,7 +200,9 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info
   [_pickerCancelCallbacks removeObjectAtIndex:index];
 
   UIViewController *rootViewController = RCTPresentedViewController();
-  [rootViewController dismissViewControllerAnimated:YES completion:nil];
+  dispatch_async(dispatch_get_main_queue(), ^{
+      [rootViewController dismissViewControllerAnimated:YES completion:nil];
+  });
 
   if (args) {
     successCallback(args);
