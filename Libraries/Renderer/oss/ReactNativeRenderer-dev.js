@@ -26,7 +26,7 @@ var deepDiffer = require("deepDiffer");
 var flattenStyle = require("flattenStyle");
 var TextInputState = require("TextInputState");
 var checkPropTypes = require("prop-types/checkPropTypes");
-var tracking = require("schedule/tracking");
+var tracking = require("schedule/tracing");
 var ExceptionsManager = require("ExceptionsManager");
 
 /**
