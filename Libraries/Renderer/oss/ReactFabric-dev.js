@@ -17,6 +17,7 @@ if (__DEV__) {
 "use strict";
 
 require("InitializeCore");
+var Platform = require('Platform');
 var ReactNativeViewConfigRegistry = require("ReactNativeViewConfigRegistry");
 var UIManager = require("UIManager");
 var React = require("react");
@@ -3820,8 +3821,8 @@ function createInstance(
   }
 
   invariant(
-    type !== "RCTView" || !hostContext.isInAParentText,
-    "Nesting of <View> within <Text> is not currently supported."
+    type !== "RCTView" || !hostContext.isInAParentText || Platform.OS !== 'android',
+    'Nesting of <View> within <Text> is not supported on Android.',
   );
 
   var updatePayload = create(props, viewConfig.validAttributes);
