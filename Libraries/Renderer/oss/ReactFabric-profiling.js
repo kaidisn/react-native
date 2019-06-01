@@ -12,6 +12,7 @@
 
 "use strict";
 require("InitializeCore");
+var Platform = require('Platform');
 var ReactNativeViewConfigRegistry = require("ReactNativeViewConfigRegistry"),
   UIManager = require("UIManager"),
   React = require("react"),
@@ -6151,8 +6152,8 @@ function completeUnitOfWork(workInProgress) {
               nextReactTag += 2;
               var viewConfig = ReactNativeViewConfigRegistry.get(type);
               invariant(
-                "RCTView" !== type || !currentHostContext.isInAParentText,
-                "Nesting of <View> within <Text> is not currently supported."
+                "RCTView" !== type || !currentHostContext.isInAParentText || Platform.OS !== 'android',
+                'Nesting of <View> within <Text> is not supported on Android.',
               );
               type = diffProperties(
                 null,
