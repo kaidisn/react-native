@@ -4472,10 +4472,6 @@ function completeUnitOfWork(workInProgress) {
             current = nextReactTag;
             nextReactTag += 2;
             var viewConfig = ReactNativeViewConfigRegistry.get(type);
-            invariant(
-              "RCTView" !== type || !currentHostContext.isInAParentText,
-              "Nesting of <View> within <Text> is not currently supported."
-            );
             type = diffProperties(
               null,
               emptyObject,

@@ -4717,10 +4717,6 @@ function completeUnitOfWork(workInProgress) {
             var internalInstanceHandle = current$$1,
               tag = allocateTag(),
               viewConfig = ReactNativeViewConfigRegistry.get(type);
-            invariant(
-              "RCTView" !== type || !current.isInAParentText,
-              "Nesting of <View> within <Text> is not currently supported."
-            );
             var updatePayload = diffProperties(
               null,
               emptyObject,

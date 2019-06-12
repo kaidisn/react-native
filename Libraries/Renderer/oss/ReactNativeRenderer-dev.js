@@ -3961,11 +3961,6 @@ function createInstance(
     }
   }
 
-  invariant(
-    type !== "RCTView" || !hostContext.isInAParentText,
-    "Nesting of <View> within <Text> is not currently supported."
-  );
-
   var updatePayload = create(props, viewConfig.validAttributes);
 
   UIManager.createView(
