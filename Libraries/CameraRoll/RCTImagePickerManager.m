@@ -17,6 +17,8 @@
 #import <React/RCTRootView.h>
 #import <React/RCTUtils.h>
 
+@import Photos;
+
 @interface RCTImagePickerController : UIImagePickerController
 
 @property (nonatomic, assign) BOOL unmirrorFrontFacingCamera;
@@ -143,7 +145,15 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info
   if (image) {
     height = @(image.size.height);
     width = @(image.size.width);
+  } else if (isMovie) {
+    PHFetchResult<PHAsset *> *assets = [PHAsset fetchAssetsWithALAssetURLs:@[[info valueForKey:UIImagePickerControllerReferenceURL]] options:nil];
+    if (assets.count > 0) {
+      PHAsset *videoAsset = assets.firstObject;
+      height = @(videoAsset.pixelHeight);
+      width = @(videoAsset.pixelWidth);
+    }
   }
+  
   if (imageURL) {
     [self _dismissPicker:picker args:@[imageURL.absoluteString, RCTNullIfNil(height), RCTNullIfNil(width)]];
     return;
