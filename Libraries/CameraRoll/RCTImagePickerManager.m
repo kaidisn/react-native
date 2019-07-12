@@ -145,7 +145,9 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info
   if (image) {
     height = @(image.size.height);
     width = @(image.size.width);
-  } else if (isMovie) {
+  } else if (isMovie && info[UIImagePickerControllerReferenceURL]) {
+    // these are movies picked from the image picker. videos taken from the camera roll are not saved yet and
+    // cannot be loaded with a width or height
     PHFetchResult<PHAsset *> *assets = [PHAsset fetchAssetsWithALAssetURLs:@[[info valueForKey:UIImagePickerControllerReferenceURL]] options:nil];
     if (assets.count > 0) {
       PHAsset *videoAsset = assets.firstObject;
