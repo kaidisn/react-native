@@ -116,6 +116,11 @@ RCT_EXPORT_METHOD(openSelectDialog:(NSDictionary *)config
   UIImagePickerController *imagePicker = [UIImagePickerController new];
   imagePicker.delegate = self;
   imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+  
+  // Don't compress the video
+  if (@available(iOS 11.0, *)) {
+    imagePicker.videoExportPreset = AVAssetExportPresetPassthrough;
+  }
 
   NSMutableArray<NSString *> *allowedTypes = [NSMutableArray new];
   if ([RCTConvert BOOL:config[@"showImages"]]) {
@@ -137,8 +142,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info
 {
   NSString *mediaType = info[UIImagePickerControllerMediaType];
   BOOL isMovie = [mediaType isEqualToString:(NSString *)kUTTypeMovie];
-  NSString *key = isMovie ? UIImagePickerControllerMediaURL : UIImagePickerControllerReferenceURL;
-  NSURL *imageURL = info[key];
+  NSURL *imageURL = info[UIImagePickerControllerReferenceURL] ?: info[UIImagePickerControllerMediaURL];
   UIImage *image = info[UIImagePickerControllerOriginalImage];
   NSNumber *width = 0;
   NSNumber *height = 0;
