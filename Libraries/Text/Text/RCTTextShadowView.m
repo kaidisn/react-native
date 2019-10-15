@@ -168,6 +168,19 @@
                          range:NSMakeRange(0, attributedText.length)];
 }
 
+// iOS 13 attributed string attachments have placeholder images
+// https://github.com/facebook/react-native/pull/26653/files
+static UIImage *emptyImg = NULL;
+- (UIImage*)getEmptyImg
+{
+  if (emptyImg == NULL) {
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(1, 1), NO, 0);
+    emptyImg = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+  }
+  return emptyImg;
+}
+
 - (NSAttributedString *)attributedTextWithMeasuredAttachmentsThatFitSize:(CGSize)size
 {
   NSMutableAttributedString *attributedText =
@@ -188,6 +201,7 @@
                                                    maximumSize:size];
       NSTextAttachment *attachment = [NSTextAttachment new];
       attachment.bounds = (CGRect){CGPointZero, fittingSize};
+      [attachment setImage:[self getEmptyImg]];
       [attributedText addAttribute:NSAttachmentAttributeName value:attachment range:range];
     }
   ];
@@ -297,7 +311,7 @@
         RCTRoundPixelValue(attachmentSize.width),
         RCTRoundPixelValue(attachmentSize.height)
       }};
-      
+
       NSRange truncatedGlyphRange = [layoutManager truncatedGlyphRangeInLineFragmentForGlyphAtIndex:range.location];
       BOOL viewIsTruncated = NSIntersectionRange(range, truncatedGlyphRange).length != 0;
 
