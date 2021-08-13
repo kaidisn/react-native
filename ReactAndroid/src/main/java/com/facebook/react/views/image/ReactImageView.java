@@ -7,12 +7,14 @@
 
 package com.facebook.react.views.image;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Outline;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
@@ -21,6 +23,9 @@ import android.graphics.Shader;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
+import android.view.View;
+import android.view.ViewOutlineProvider;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import com.facebook.common.references.CloseableReference;
@@ -205,6 +210,18 @@ public class ReactImageView extends GenericDraweeView {
   private int mFadeDurationMs = -1;
   private boolean mProgressiveRenderingEnabled;
   private ReadableMap mHeaders;
+  private RoundingOutlineProvider viewOutlineProvider;
+
+  @SuppressLint("NewApi")
+  private class RoundingOutlineProvider extends ViewOutlineProvider {
+
+    Float radius = 0f;
+
+    @Override
+    public void getOutline(View view, Outline outline) {
+      outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), radius);
+    }
+  }
 
   // We can't specify rounding in XML, so have to do so here
   private static GenericDraweeHierarchy buildHierarchy(Context context) {
@@ -469,11 +486,27 @@ public class ReactImageView extends GenericDraweeView {
 
     cornerRadii(sComputedCornerRadii);
 
-    roundingParams.setCornersRadii(
+    // If equal rounding on all corners and API 21+ use view clipping for rounding.
+    if (
+      sComputedCornerRadii[0] == sComputedCornerRadii[1] &&
+      sComputedCornerRadii[0] == sComputedCornerRadii[2] &&
+      sComputedCornerRadii[0] == sComputedCornerRadii[3] &&
+      sComputedCornerRadii[0] > 0 &&
+      Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      if (viewOutlineProvider == null) {
+        viewOutlineProvider = new RoundingOutlineProvider();
+      }
+      viewOutlineProvider.radius = sComputedCornerRadii[0];
+
+      setClipToOutline(true);
+      setOutlineProvider(viewOutlineProvider);
+    } else {
+      roundingParams.setCornersRadii(
         sComputedCornerRadii[0],
         sComputedCornerRadii[1],
         sComputedCornerRadii[2],
         sComputedCornerRadii[3]);
+    }
 
     if (mBackgroundImageDrawable != null) {
       mBackgroundImageDrawable.setBorder(mBorderColor, mBorderWidth);
