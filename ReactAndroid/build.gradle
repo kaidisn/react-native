@@ -60,6 +60,7 @@ task prepareBoost(dependsOn: boostPath ? [] : [downloadBoost], type: Copy) {
     from("src/main/jni/third-party/boost")
     include("Android.mk", "boost_${BOOST_VERSION}/boost/**/*.hpp", "boost/boost/**/*.hpp", "asm/**/*.S")
     includeEmptyDirs = false
+    duplicatesStrategy = 'include'
     into("$thirdPartyNdkDir/boost")
     doLast {
         file("$thirdPartyNdkDir/boost/boost").renameTo("$thirdPartyNdkDir/boost/boost_${BOOST_VERSION}")
@@ -188,6 +189,7 @@ task prepareGlog(dependsOn: dependenciesPath ? [] : [downloadGlog], type: Copy) 
     from("src/main/jni/third-party/glog/")
     include("glog-${GLOG_VERSION}/src/**/*", "Android.mk", "config.h")
     includeEmptyDirs = false
+    duplicatesStrategy = 'include'
     filesMatching("**/*.h.in") {
         filter(ReplaceTokens, tokens: [
                 ac_cv_have_unistd_h           : "1",
