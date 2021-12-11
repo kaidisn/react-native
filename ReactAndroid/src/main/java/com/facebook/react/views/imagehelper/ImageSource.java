@@ -19,18 +19,36 @@ public class ImageSource {
   private String mSource;
   private double mSize;
   private boolean isResource;
+  private boolean isForceCached;
 
-  public ImageSource(Context context, String source, double width, double height) {
+  public ImageSource(Context context, String source, double width, double height, boolean forceCached) {
     mSource = source;
     mSize = width * height;
+    isForceCached = forceCached;
 
     // Important: we compute the URI here so that we don't need to hold a reference to the context,
     // potentially causing leaks.
     mUri = computeUri(context);
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    ImageSource that = (ImageSource) o;
+    return Double.compare(that.mSize, mSize) == 0
+      && isResource == that.isResource
+      && Objects.equals(mUri, that.mUri)
+      && Objects.equals(mSource, that.mSource);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(mUri, mSource, mSize, isResource);
+  }
+
   public ImageSource(Context context, String source) {
-    this(context, source, 0.0d, 0.0d);
+    this(context, source, 0.0d, 0.0d, false);
   }
 
   /** Get the source of this image, as it was passed to the constructor. */
@@ -46,6 +64,10 @@ public class ImageSource {
   /** Get the area of this image. */
   public double getSize() {
     return mSize;
+  }
+
+  public boolean isForceCached() {
+    return isForceCached;
   }
 
   /** Get whether this image source represents an Android resource or a network URI. */
