@@ -12,6 +12,8 @@ import android.net.Uri;
 import androidx.annotation.Nullable;
 import com.facebook.infer.annotation.Assertions;
 
+import java.util.Objects;
+
 /** Class describing an image source (network URI or resource) and size. */
 public class ImageSource {
 
