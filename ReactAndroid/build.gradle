@@ -10,7 +10,6 @@ plugins {
     id("com.facebook.react.codegen")
     id("maven-publish")
     id("de.undercouch.download")
-    id("com.google.cloud.artifactregistry.gradle-plugin") version "2.1.1"
 }
 
 import java.nio.file.Paths
